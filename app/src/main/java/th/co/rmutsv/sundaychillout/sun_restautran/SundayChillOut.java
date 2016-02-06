@@ -1,8 +1,11 @@
 package th.co.rmutsv.sundaychillout.sun_restautran;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import java.io.InputStream;
 
 public class SundayChillOut extends AppCompatActivity {
 
@@ -23,8 +26,44 @@ public class SundayChillOut extends AppCompatActivity {
         //Clean data
         cleanData();
 
+        //Synchronize JSON to SQLlite
+        synJSONtoSQLite();
+
 
     } //main mettord
+
+    private void synJSONtoSQLite() {
+
+        //Change Policy
+        StrictMode.ThreadPolicy myThreadPolicy = new StrictMode.ThreadPolicy
+                .Builder().permitAll().build();
+        StrictMode.setThreadPolicy(myThreadPolicy);
+
+        int intTable = 1;
+        String tag = "Restaurant";
+
+        while (intTable<=2) {
+
+            //1 สร้าง input stream
+
+            InputStream objInputStream = null;
+            String strURLuser = "http://swiftcodingthai.com/6feb/php_get_asun.php";
+            String strURLfood = "http://swiftcodingthai.com/6feb/php_get_data_food.php";
+
+            try {
+
+            } catch (Exception e) {
+                long.d("tag,InputStream ==>" + e.toString());
+            }
+
+            //2 สร้าง JSON String
+            //3 UPDATe SQLlife
+
+
+            intTable += 1;
+        }   //while
+
+    }
 
     private void cleanData() {
 
