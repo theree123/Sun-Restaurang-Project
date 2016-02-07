@@ -1,8 +1,10 @@
 package th.co.rmutsv.sundaychillout.sun_restautran;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,8 +24,12 @@ public class ServiceActivity extends AppCompatActivity {
     private TextView showNameTextView;
     private Spinner deskSpinner;
     private ListView foodListView;
-    private String officerString, deskString, FoodString, amountString;
-
+    private String officerString, deskString, MyFoodString, amountString;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -43,6 +49,9 @@ public class ServiceActivity extends AppCompatActivity {
         showMenufood();
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     } //main method
 
     private void showMenufood() {
@@ -52,7 +61,7 @@ public class ServiceActivity extends AppCompatActivity {
         Cursor objCursor = objSqLiteDatabase.rawQuery("SELECT * FROM " + MyManage.food_TABLE, null);
 
         int intCount = objCursor.getCount();
-        String[] foodStrings = new String[intCount];
+        final String[] foodStrings = new String[intCount];
         String[] priceStrings = new String[intCount];
         String[] sourceStrings = new String[intCount];
 
@@ -71,7 +80,31 @@ public class ServiceActivity extends AppCompatActivity {
                 priceStrings, sourceStrings);
         foodListView.setAdapter(objMyAdaper);
 
+        foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                confirmOder(foodStrings[i]);
+            }
+        });
+
     } //showMenufood
+
+    private void confirmOder(String foodString) {
+
+        MyFoodString = foodString;
+        CharSequence[] objCharSequences = {"1จาน", "2จาน", "3จาน", "4จาน", "5จาน"};
+        AlertDialog.Builder objBuilder = new AlertDialog.Builder(this);
+        objBuilder.setTitle(foodString);
+        objBuilder.setSingleChoiceItems(objCharSequences, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                amountString = Integer.toString(i + 1);
+                dialogInterface.dismiss();
+            }
+        });
+        objBuilder.show();
+
+    }   //confirmorder
 
     private void showDesk() {
 
@@ -106,8 +139,43 @@ public class ServiceActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Service Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://th.co.rmutsv.sundaychillout.sun_restautran/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
 
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Service Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://th.co.rmutsv.sundaychillout.sun_restautran/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 } //main classic
