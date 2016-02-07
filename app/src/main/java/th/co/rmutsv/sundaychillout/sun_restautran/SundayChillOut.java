@@ -1,5 +1,6 @@
 package th.co.rmutsv.sundaychillout.sun_restautran;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -83,6 +84,12 @@ public class SundayChillOut extends AppCompatActivity {
             String[] resuStrings = objMyManage.searchUser(userString);
             if (passwordString.equals(resuStrings[2])) {
                 //inten to service
+                Intent objIntent = new Intent(SundayChillOut.this, ServiceActivity.class);
+                objIntent.putExtra("Name", resuStrings[3]);
+                startActivity(objIntent);
+                finish();
+
+
             } else {
                 Toast.makeText(SundayChillOut.this,
                         "Password ผิด",
