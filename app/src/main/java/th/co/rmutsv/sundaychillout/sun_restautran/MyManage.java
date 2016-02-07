@@ -2,6 +2,7 @@ package th.co.rmutsv.sundaychillout.sun_restautran;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -30,6 +31,39 @@ public class MyManage {
         readSqLiteDatabase = objopenHelper.getReadableDatabase();
 
     }
+
+    public String[] searchUser(String strUser) {
+
+        try {
+
+            String[] resuliStrings = null;
+            Cursor objCursor = readSqLiteDatabase.query(user_TABLE,
+                    new String[]{colum_id, colum_user, colum_pass, colum_name},
+                    colum_user +"=?",
+                    new String[] {String.valueOf(strUser)},
+                    null, null, null, null);
+
+            if (objCursor !=null) {
+                if (objCursor.moveToFirst()) {
+
+                    resuliStrings = new String[4];
+                    for (int i = 0; i < 4; i++) {
+                        resuliStrings[i] = objCursor.getString(i);
+                    }
+
+                }//if2
+            }//if1
+            objCursor.close();
+            return resuliStrings;
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        //return new String[0];
+    }
+
+
     public long addNewValue(int inTable,
                             String strColum2,
                             String strColum3,

@@ -5,6 +5,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,12 +25,18 @@ public class SundayChillOut extends AppCompatActivity {
 
     //Explicit
     private MyManage objMyManage;
+    private EditText userEditText, PasswordEditText;
+    private String userString, passwordString;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sunday_chill_out);
+
+        //BindWidget
+        userEditText = (EditText) findViewById(R.id.editText);
+        PasswordEditText = (EditText) findViewById(R.id.editText2);
 
         //Request Database
         objMyManage = new MyManage(this);
@@ -43,6 +52,49 @@ public class SundayChillOut extends AppCompatActivity {
 
 
     }   // Main Method
+
+    public void clickLogin(View view) {
+
+        //check space
+        userString = userEditText.getText().toString().trim();
+        passwordString = PasswordEditText.getText().toString().trim();
+
+        if (userString.equals("") || passwordString.equals("")) {
+
+            //Have Space
+            Toast.makeText(SundayChillOut.this,
+                    "กรุณากรอกให้ครบ",
+                    Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            //No Space
+            checkAuthen();
+
+        }   //if
+
+
+    }   //cickLogin
+
+    private void checkAuthen() {
+
+        try {
+
+            String[] resuStrings = objMyManage.searchUser(userString);
+            if (passwordString.equals(resuStrings[2])) {
+                //inten to service
+            } else {
+                Toast.makeText(SundayChillOut.this,
+                        "Password ผิด",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(SundayChillOut.this,
+                    "ไม่มี"+ userString+"ในฐานข้อมูลของเรา",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void synJSONtoSQLite() {
 
