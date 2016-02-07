@@ -1,5 +1,7 @@
 package th.co.rmutsv.sundaychillout.sun_restautran;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,10 +36,42 @@ public class ServiceActivity extends AppCompatActivity {
 
         showView();
 
+        //showDesk
         showDesk();
+
+        //show menu
+        showMenufood();
 
 
     } //main method
+
+    private void showMenufood() {
+
+        SQLiteDatabase objSqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                MODE_PRIVATE, null);
+        Cursor objCursor = objSqLiteDatabase.rawQuery("SELECT * FROM " + MyManage.food_TABLE, null);
+
+        int intCount = objCursor.getCount();
+        String[] foodStrings = new String[intCount];
+        String[] priceStrings = new String[intCount];
+        String[] sourceStrings = new String[intCount];
+
+        objCursor.moveToFirst();
+        for (int i = 0; i < intCount; i++) {
+
+            foodStrings[i] = objCursor.getString(objCursor.getColumnIndex(MyManage.colum_food));
+            priceStrings[i] = objCursor.getString(objCursor.getColumnIndex(MyManage.colum_price));
+            sourceStrings[i] = objCursor.getString(objCursor.getColumnIndex(MyManage.colum_source));
+
+            objCursor.moveToNext();
+        }//for
+        objCursor.close();
+
+        MyAdaper objMyAdaper = new MyAdaper(ServiceActivity.this, foodStrings,
+                priceStrings, sourceStrings);
+        foodListView.setAdapter(objMyAdaper);
+
+    } //showMenufood
 
     private void showDesk() {
 
